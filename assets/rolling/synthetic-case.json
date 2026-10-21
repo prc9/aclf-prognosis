@@ -1,0 +1,447 @@
+{
+  "synthetic": true,
+  "case_id": "SYNTHETIC-ROLLING-REPORTS",
+  "age": 53,
+  "admission_time": "2026-07-08T08:00:00",
+  "baseline_time": "2026-07-08T18:00:00",
+  "assessment_time": "2026-07-22T18:00:00",
+  "prior_definite": 1,
+  "prior_ascites_or_he_code": 0,
+  "current_status": {
+    "alive": true,
+    "transplanted": false,
+    "in_index_admission": true
+  },
+  "measurements": [
+    {
+      "feature": "total_bilirubin",
+      "value": 468.9,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-08T16:00:00",
+      "available_at": "2026-07-08T18:00:00",
+      "trigger": true
+    },
+    {
+      "feature": "inr",
+      "value": 2.93,
+      "unit": "比值",
+      "measured_at": "2026-07-08T16:00:00",
+      "available_at": "2026-07-08T18:00:00",
+      "trigger": true
+    },
+    {
+      "feature": "creatinine",
+      "value": 160.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-08T16:00:00",
+      "available_at": "2026-07-08T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 25,
+      "unit": "g/L",
+      "measured_at": "2026-07-08T16:00:00",
+      "available_at": "2026-07-08T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 130,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-08T16:00:00",
+      "available_at": "2026-07-08T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 104.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-08T16:00:00",
+      "available_at": "2026-07-08T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 65,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-08T16:00:00",
+      "available_at": "2026-07-08T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 433.9,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-09T16:00:00",
+      "available_at": "2026-07-09T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 2.75,
+      "unit": "比值",
+      "measured_at": "2026-07-09T16:00:00",
+      "available_at": "2026-07-09T17:00:00"
+    },
+    {
+      "feature": "creatinine",
+      "value": 151.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-09T16:00:00",
+      "available_at": "2026-07-09T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 26,
+      "unit": "g/L",
+      "measured_at": "2026-07-09T16:00:00",
+      "available_at": "2026-07-09T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 131,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-09T16:00:00",
+      "available_at": "2026-07-09T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 101.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-09T16:00:00",
+      "available_at": "2026-07-09T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 71,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-09T16:00:00",
+      "available_at": "2026-07-09T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 398.9,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-10T16:00:00",
+      "available_at": "2026-07-10T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 2.5700000000000003,
+      "unit": "比值",
+      "measured_at": "2026-07-10T16:00:00",
+      "available_at": "2026-07-10T17:00:00"
+    },
+    {
+      "feature": "creatinine",
+      "value": 142.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-10T16:00:00",
+      "available_at": "2026-07-10T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 27,
+      "unit": "g/L",
+      "measured_at": "2026-07-10T16:00:00",
+      "available_at": "2026-07-10T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 132,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-10T16:00:00",
+      "available_at": "2026-07-10T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 98.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-10T16:00:00",
+      "available_at": "2026-07-10T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 77,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-10T16:00:00",
+      "available_at": "2026-07-10T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 363.9,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-11T16:00:00",
+      "available_at": "2026-07-11T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 2.39,
+      "unit": "比值",
+      "measured_at": "2026-07-11T16:00:00",
+      "available_at": "2026-07-11T17:00:00"
+    },
+    {
+      "feature": "creatinine",
+      "value": 133.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-11T16:00:00",
+      "available_at": "2026-07-11T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 28,
+      "unit": "g/L",
+      "measured_at": "2026-07-11T16:00:00",
+      "available_at": "2026-07-11T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 133,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-11T16:00:00",
+      "available_at": "2026-07-11T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 95.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-11T16:00:00",
+      "available_at": "2026-07-11T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 83,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-11T16:00:00",
+      "available_at": "2026-07-11T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 328.9,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-12T16:00:00",
+      "available_at": "2026-07-12T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 2.21,
+      "unit": "比值",
+      "measured_at": "2026-07-12T16:00:00",
+      "available_at": "2026-07-12T17:00:00"
+    },
+    {
+      "feature": "creatinine",
+      "value": 124.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-12T16:00:00",
+      "available_at": "2026-07-12T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 29,
+      "unit": "g/L",
+      "measured_at": "2026-07-12T16:00:00",
+      "available_at": "2026-07-12T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 134,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-12T16:00:00",
+      "available_at": "2026-07-12T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 92.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-12T16:00:00",
+      "available_at": "2026-07-12T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 89,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-12T16:00:00",
+      "available_at": "2026-07-12T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 293.9,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-13T16:00:00",
+      "available_at": "2026-07-13T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 2.0300000000000002,
+      "unit": "比值",
+      "measured_at": "2026-07-13T16:00:00",
+      "available_at": "2026-07-13T17:00:00"
+    },
+    {
+      "feature": "creatinine",
+      "value": 115.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-13T16:00:00",
+      "available_at": "2026-07-13T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 30,
+      "unit": "g/L",
+      "measured_at": "2026-07-13T16:00:00",
+      "available_at": "2026-07-13T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 135,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-13T16:00:00",
+      "available_at": "2026-07-13T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 89.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-13T16:00:00",
+      "available_at": "2026-07-13T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 95,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-13T16:00:00",
+      "available_at": "2026-07-13T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 258.9,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-14T16:00:00",
+      "available_at": "2026-07-14T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 1.85,
+      "unit": "比值",
+      "measured_at": "2026-07-14T16:00:00",
+      "available_at": "2026-07-14T17:00:00"
+    },
+    {
+      "feature": "creatinine",
+      "value": 106.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-14T16:00:00",
+      "available_at": "2026-07-14T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 31,
+      "unit": "g/L",
+      "measured_at": "2026-07-14T16:00:00",
+      "available_at": "2026-07-14T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 136,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-14T16:00:00",
+      "available_at": "2026-07-14T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 86.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-14T16:00:00",
+      "available_at": "2026-07-14T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 101,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-14T16:00:00",
+      "available_at": "2026-07-14T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 223.89999999999998,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-15T16:00:00",
+      "available_at": "2026-07-15T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 1.6700000000000002,
+      "unit": "比值",
+      "measured_at": "2026-07-15T16:00:00",
+      "available_at": "2026-07-15T17:00:00"
+    },
+    {
+      "feature": "creatinine",
+      "value": 97.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-15T16:00:00",
+      "available_at": "2026-07-15T17:00:00"
+    },
+    {
+      "feature": "albumin",
+      "value": 32,
+      "unit": "g/L",
+      "measured_at": "2026-07-15T16:00:00",
+      "available_at": "2026-07-15T17:00:00"
+    },
+    {
+      "feature": "sodium",
+      "value": 137,
+      "unit": "mmol/L",
+      "measured_at": "2026-07-15T16:00:00",
+      "available_at": "2026-07-15T17:00:00"
+    },
+    {
+      "feature": "heart_rate",
+      "value": 83.0,
+      "unit": "次/分",
+      "measured_at": "2026-07-15T16:00:00",
+      "available_at": "2026-07-15T17:00:00"
+    },
+    {
+      "feature": "platelets",
+      "value": 107,
+      "unit": "10⁹/L",
+      "measured_at": "2026-07-15T16:00:00",
+      "available_at": "2026-07-15T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 330.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-18T15:00:00",
+      "available_at": "2026-07-18T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 2.35,
+      "unit": "比值",
+      "measured_at": "2026-07-18T15:00:00",
+      "available_at": "2026-07-18T17:00:00"
+    },
+    {
+      "feature": "total_bilirubin",
+      "value": 302.0,
+      "unit": "μmol/L",
+      "measured_at": "2026-07-22T15:00:00",
+      "available_at": "2026-07-22T17:00:00"
+    },
+    {
+      "feature": "inr",
+      "value": 2.25,
+      "unit": "比值",
+      "measured_at": "2026-07-22T15:00:00",
+      "available_at": "2026-07-22T17:00:00"
+    }
+  ],
+  "reports": [
+    {
+      "text": "FINDINGS: Cirrhotic morphology of the liver with moderate ascites and splenomegaly. Small bilateral pleural effusions. No focal hepatic lesion.\nIMPRESSION: Portal hypertension with ascites. Pleural effusions have decreased.",
+      "measured_at": "2026-07-22T14:00:00",
+      "available_at": "2026-07-22T16:00:00"
+    }
+  ],
+  "support_records": []
+}

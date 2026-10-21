@@ -1,0 +1,237 @@
+{
+  "version": "rolling_reports_primary14_exploratory28_v1",
+  "model_sha256": "77d6d1bfb4de70a536845d45d504e7a04589c977fe0aff22ad3695c0cbf8c6c9",
+  "test_previously_inspected": true,
+  "external_dynamic_evaluation_completed": false,
+  "primary_days": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "exploratory_days": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ],
+  "overall": [
+    {
+      "day": 0,
+      "horizon": 28,
+      "patients": 299,
+      "death_cif_auc_ipcw": 0.8013108795,
+      "death_cif_auprc_ipcw": 0.6609014646,
+      "death_cif_brier_ipcw": 0.1722261455
+    },
+    {
+      "day": 0,
+      "horizon": 90,
+      "patients": 299,
+      "death_cif_auc_ipcw": 0.7504178733,
+      "death_cif_auprc_ipcw": 0.7315333644,
+      "death_cif_brier_ipcw": 0.2106830127
+    },
+    {
+      "day": 3,
+      "horizon": 28,
+      "patients": 250,
+      "death_cif_auc_ipcw": 0.7936468054,
+      "death_cif_auprc_ipcw": 0.6523445209,
+      "death_cif_brier_ipcw": 0.1634714664
+    },
+    {
+      "day": 3,
+      "horizon": 90,
+      "patients": 250,
+      "death_cif_auc_ipcw": 0.7410626756,
+      "death_cif_auprc_ipcw": 0.6920896513,
+      "death_cif_brier_ipcw": 0.2089572091
+    },
+    {
+      "day": 7,
+      "horizon": 28,
+      "patients": 182,
+      "death_cif_auc_ipcw": 0.7576219103,
+      "death_cif_auprc_ipcw": 0.5861325933,
+      "death_cif_brier_ipcw": 0.1903969965
+    },
+    {
+      "day": 7,
+      "horizon": 90,
+      "patients": 182,
+      "death_cif_auc_ipcw": 0.6990385786,
+      "death_cif_auprc_ipcw": 0.6599507812,
+      "death_cif_brier_ipcw": 0.2320139899
+    },
+    {
+      "day": 14,
+      "horizon": 28,
+      "patients": 114,
+      "death_cif_auc_ipcw": 0.8033228857,
+      "death_cif_auprc_ipcw": 0.6922332281,
+      "death_cif_brier_ipcw": 0.1772427891
+    },
+    {
+      "day": 14,
+      "horizon": 90,
+      "patients": 114,
+      "death_cif_auc_ipcw": 0.7533950617,
+      "death_cif_auprc_ipcw": 0.7099026929,
+      "death_cif_brier_ipcw": 0.2069039422
+    },
+    {
+      "day": 21,
+      "horizon": 28,
+      "patients": 58,
+      "death_cif_auc_ipcw": 0.7348484848,
+      "death_cif_auprc_ipcw": 0.7162502201,
+      "death_cif_brier_ipcw": 0.2061779278
+    },
+    {
+      "day": 21,
+      "horizon": 90,
+      "patients": 58,
+      "death_cif_auc_ipcw": 0.7512439399,
+      "death_cif_auprc_ipcw": 0.7583186938,
+      "death_cif_brier_ipcw": 0.2145935586
+    },
+    {
+      "day": 28,
+      "horizon": 28,
+      "patients": 36,
+      "death_cif_auc_ipcw": 0.6076388889,
+      "death_cif_auprc_ipcw": 0.5870050705,
+      "death_cif_brier_ipcw": 0.2333290498
+    },
+    {
+      "day": 28,
+      "horizon": 90,
+      "patients": 36,
+      "death_cif_auc_ipcw": 0.659375,
+      "death_cif_auprc_ipcw": 0.7027278266,
+      "death_cif_brier_ipcw": 0.2497937969
+    }
+  ],
+  "with_report": [
+    {
+      "day": 0,
+      "horizon": 28,
+      "patients": 76,
+      "death_cif_auc_ipcw": 0.8384314305,
+      "death_cif_auprc_ipcw": 0.699868739,
+      "death_cif_brier_ipcw": 0.1807512044
+    },
+    {
+      "day": 0,
+      "horizon": 90,
+      "patients": 76,
+      "death_cif_auc_ipcw": 0.7851192925,
+      "death_cif_auprc_ipcw": 0.7417767414,
+      "death_cif_brier_ipcw": 0.2146134648
+    },
+    {
+      "day": 3,
+      "horizon": 28,
+      "patients": 68,
+      "death_cif_auc_ipcw": 0.6828996954,
+      "death_cif_auprc_ipcw": 0.6013127521,
+      "death_cif_brier_ipcw": 0.2308710206
+    },
+    {
+      "day": 3,
+      "horizon": 90,
+      "patients": 68,
+      "death_cif_auc_ipcw": 0.6463306808,
+      "death_cif_auprc_ipcw": 0.6252985903,
+      "death_cif_brier_ipcw": 0.2790097689
+    },
+    {
+      "day": 7,
+      "horizon": 28,
+      "patients": 55,
+      "death_cif_auc_ipcw": 0.7549309032,
+      "death_cif_auprc_ipcw": 0.6046963693,
+      "death_cif_brier_ipcw": 0.2093219411
+    },
+    {
+      "day": 7,
+      "horizon": 90,
+      "patients": 55,
+      "death_cif_auc_ipcw": 0.7161803714,
+      "death_cif_auprc_ipcw": 0.6730119905,
+      "death_cif_brier_ipcw": 0.2363848715
+    },
+    {
+      "day": 14,
+      "horizon": 28,
+      "patients": 32,
+      "death_cif_auc_ipcw": 0.7453073726,
+      "death_cif_auprc_ipcw": 0.7302901003,
+      "death_cif_brier_ipcw": 0.2361691381
+    },
+    {
+      "day": 14,
+      "horizon": 90,
+      "patients": 32,
+      "death_cif_auc_ipcw": 0.71484375,
+      "death_cif_auprc_ipcw": 0.735225127,
+      "death_cif_brier_ipcw": 0.2465466616
+    },
+    {
+      "day": 21,
+      "horizon": 28,
+      "patients": 10,
+      "death_cif_auc_ipcw": 0.76,
+      "death_cif_auprc_ipcw": 0.8444444444,
+      "death_cif_brier_ipcw": 0.2085264158
+    },
+    {
+      "day": 21,
+      "horizon": 90,
+      "patients": 10,
+      "death_cif_auc_ipcw": 0.76,
+      "death_cif_auprc_ipcw": 0.8384478418,
+      "death_cif_brier_ipcw": 0.2159079679
+    },
+    {
+      "day": 28,
+      "horizon": 28,
+      "patients": 8,
+      "death_cif_auc_ipcw": 0.5,
+      "death_cif_auprc_ipcw": 0.625,
+      "death_cif_brier_ipcw": 0.2077984062
+    },
+    {
+      "day": 28,
+      "horizon": 90,
+      "patients": 8,
+      "death_cif_auc_ipcw": 0.6666666667,
+      "death_cif_auprc_ipcw": 0.6984126984,
+      "death_cif_brier_ipcw": 0.2486782453
+    }
+  ],
+  "reports_encoded": 9377,
+  "report_sentences": 65432
+}
