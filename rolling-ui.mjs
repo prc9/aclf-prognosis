@@ -1,4 +1,4 @@
-import {en,zh,fieldNames,guides} from './rolling-i18n.mjs?v=20261025';
+import {en,zh,fieldNames,guides} from './rolling-i18n.mjs?v=20261025-2';
 import {timestamp} from './time.mjs?v=20261025';
 import {DAY,HOUR,iso,supportKeys} from './rolling-features.mjs?v=20261025';
 const $=id=>document.getElementById(id),el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
@@ -110,12 +110,6 @@ function exportCase(){if(!current||!submitted||busy)return;saveReview();const pa
 function exportCsv(){if(!current||busy)return;const lines=['assessment_time,day,model_version,model_sha256,horizon_days,deadline,death_before_transplant,transplant,event_free'];for(const s of snapshots)for(const h of [28,90]){const r=s.results[h];lines.push([s.assessment_time,s.days_since_T0,s.version,s.model_sha256,h,r.endpoint_time,r.death_before_transplant,r.liver_transplant,r.event_free].join(','));}saveBlob(new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),'ACLF_daily_history.csv');const rows=['assessment_time,days_from_assessment,death_before_transplant,transplant,event_free'];for(let d=0;d<=90;d++)rows.push([current.assessment_time,d,current.curves.death[d],current.curves.transplant[d],current.curves.free[d]].join(','));saveBlob(new Blob(['\uFEFF'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'}),'ACLF_selected_curves.csv');}
 async function loadDemo(withReport=false){const response=await fetch('./assets/rolling/synthetic-case.json');if(!response.ok)throw Error('Synthetic case unavailable');const data=await response.json();if(!withReport)data.reports=[];populate(data);view('predict');}
 async function health(){try{const h=await request('health');ready=h.state==='ready';$('health').textContent=h.message||t(ready?'ready':'loading');$('predict').disabled=!ready||busy;$('daily').disabled=!ready||busy;if(!ready&&h.state!=='error')setTimeout(health,2000);}catch(e){$('health').textContent=e.message;}}
-async function showMetrics(){
- const response=await fetch('./assets/rolling/metrics.json');if(!response.ok)throw Error('Model metrics unavailable');const data=await response.json();
- const root=$('metrics-content');root.replaceChildren(el('p','field-help',data.version+' · SHA256 '+data.model_sha256));
- for(const [key,label]of [['overall','allPatients'],['with_report','reportedPatients']]){root.append(el('h3','',t(label)));const wrap=el('div','table-wrap'),table=el('table'),head=el('tr');for(const v of [t('day'),lang==='en'?'Horizon': '未来天数',t('patients'),'AUC','AUPRC','Brier'])head.append(el('th','',v));table.append(head);for(const row of data[key]){const tr=el('tr');for(const v of [row.day+(row.day>14?' *':''),row.horizon,row.patients,...['death_cif_auc_ipcw','death_cif_auprc_ipcw','death_cif_brier_ipcw'].map(k=>row[k]===null?'—':row[k].toFixed(3))])tr.append(el('td','',v));table.append(tr);}wrap.append(table);root.append(wrap);}
- $('metrics-dialog').showModal();
-}
 function explanationKey(){return current?current.model_sha256+':'+current.input_sha256:'';}
 function groupName(g){
  if(g.kind==='numeric')return fieldName(schema.fields.find(f=>f.key===g.key));
@@ -184,6 +178,6 @@ async function init(){
  $('explain-assessment').onchange=()=>{if(busy)return;saveReview();current=snapshots.find(s=>s.assessment_time===$('explain-assessment').value);renderCurrent();ensureExplanation();};
  $('export-explanation').onclick=exportExplanation;$('print-explanation').onclick=()=>window.print();
  $('import').onclick=()=>$('import-file').click();$('import-file').onchange=async()=>{const f=$('import-file').files[0];if(!f)return;try{if(f.size>16*1024*1024)throw Error('Case JSON exceeds 16 MiB');const pack=JSON.parse(await f.text());const data=pack.case||pack;if(!data||!Array.isArray(data.measurements)||!(data.baseline_time||data.prediction_time))throw Error(t('importError'));populate(data,{resetStatus:true});importedHistory=Array.isArray(pack.prediction_history)?pack.prediction_history:[];importedReview=pack.review_records&&typeof pack.review_records==='object'?pack.review_records:{};$('error').hidden=true;$('demo-note').hidden=false;$('demo-note').textContent=t('imported');}catch(e){$('error').textContent=e.message;$('error').hidden=false;}finally{$('import-file').value='';}};
- if(new URLSearchParams(location.search).get('guide')==='1')$('guide-dialog').showModal();$('metrics').onclick=()=>showMetrics().catch(e=>alert(e.message));$('close-metrics').onclick=()=>$('metrics-dialog').close();health();
+ if(new URLSearchParams(location.search).get('guide')==='1')$('guide-dialog').showModal();health();
 }
 init().catch(e=>{$('health').textContent=e.message;});
