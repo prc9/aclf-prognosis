@@ -1,6 +1,6 @@
 // Numerical feature contract shared with dynamic_prediction/features.py.
 // Timestamps use a timezone-free wall-clock axis, independent of device zone.
-import {timestamp} from './features.mjs';
+import {timestamp} from './time.mjs?v=20261025';
 export const HOUR=3600000,DAY=24*HOUR;
 export const supportKeys=['mechanical_ventilation_in_window','rrt_in_window','vasopressor_in_window'];
 const finite=v=>typeof v==='number'&&Number.isFinite(v);

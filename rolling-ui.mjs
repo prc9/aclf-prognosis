@@ -1,14 +1,15 @@
-import {en,zh,fieldNames,guides} from './rolling-i18n.mjs';
-import {timestamp} from './features.mjs';
-import {DAY,HOUR,iso,supportKeys} from './rolling-features.mjs';
+import {en,zh,fieldNames,guides} from './rolling-i18n.mjs?v=20261025';
+import {timestamp} from './time.mjs?v=20261025';
+import {DAY,HOUR,iso,supportKeys} from './rolling-features.mjs?v=20261025';
 const $=id=>document.getElementById(id),el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
 let lang=new URLSearchParams(location.search).get('lang')==='zh'?'zh':'en',schema,ready=false,busy=false,synthetic=false,current=null,snapshots=[],submitted=null,importedHistory=[],importedReview={},review={};
+const explanations=new Map();
 const t=k=>(lang==='en'?en:zh)[k]||k,fieldName=f=>lang==='en'?(fieldNames[f.key]||f.key):f.label;
 const unit=u=>lang==='en'?({'比值':'ratio','比例':'fraction','次/分':'/min','℃':'°C','分':'points','秒':'s'}[u]||u):u;
 const pct=v=>(v*100).toFixed(1)+'%',date=v=>v.replace('T',' ').slice(0,19),localNow=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,19);
-const worker=new Worker(new URL('./rolling-worker.mjs',import.meta.url),{type:'module'}),pending=new Map();let seq=0,workerFailure='';
+const worker=new Worker(new URL('./rolling-worker.mjs?v=20261025',import.meta.url),{type:'module'}),pending=new Map();let seq=0,workerFailure='';
 worker.onmessage=({data})=>{
- if(data.progress){const p=data.progress;$('progress').hidden=false;$('progress').textContent=p.stage==='daily'?`${t('running')} ${p.day} / ${p.through}`:p.stage==='model'?`${t('progressModel')} · ${p.name} · ${(p.bytes/1048576).toFixed(0)} MiB`:p.stage==='graph'?`${t('progressGraph')} · ${p.sentence}/${p.sentences}`:`${t('progressClinical')} · ${p.report||''} ${p.chunk||''}/${p.chunks||''}`;return;}
+ if(data.progress){const p=data.progress;$('progress').hidden=false;$('progress').textContent=p.stage==='explain'?`${t('explanationProgress')} · ${p.completed}/${p.total}`:p.stage==='daily'?`${t('running')} ${p.day} / ${p.through}`:p.stage==='model'?`${t('progressModel')} · ${p.name} · ${(p.bytes/1048576).toFixed(0)} MiB`:p.stage==='graph'?`${t('progressGraph')} · ${p.sentence}/${p.sentences}`:`${t('progressClinical')} · ${p.report||''} ${p.chunk||''}/${p.chunks||''}`;return;}
  const q=pending.get(data.id);if(!q)return;pending.delete(data.id);data.error?q.reject(Error(data.error)):q.resolve(data.value);
 };
 worker.onerror=e=>{workerFailure=e.message||'Browser worker failed';for(const q of pending.values())q.reject(Error(workerFailure));pending.clear();$('health').textContent=workerFailure;};
@@ -16,7 +17,7 @@ const request=(path,payload)=>new Promise((resolve,reject)=>{if(workerFailure)re
 const bindText=()=>document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));
 function selectOptions(select,entries){const value=select.value;select.replaceChildren(...entries.map(([v,label])=>{const o=el('option','',label);o.value=v;return o;}));if(entries.some(([v])=>v===value))select.value=value;}
 function control(label,key,type,value='',required=false){const l=el('label');const span=el('span');span.dataset.t=label;span.textContent=t(label);const input=el('input');input.type=type;if(type=='datetime-local')input.step='1';input.className=key;input.value=value;input.required=required;l.append(span,input);return l;}
-function markDirty(){if(busy)return;saveReview();current=null;submitted=null;snapshots=[];review={};$('results').hidden=true;$('empty').hidden=false;$('history-chart').hidden=true;$('history-rows').replaceChildren();$('evidence-view').hidden=true;$('predict-view').hidden=false;$('predict-tab').classList.add('active');$('evidence-tab').classList.remove('active');$('demo-note').hidden=!synthetic;}
+function markDirty(){if(busy)return;saveReview();current=null;submitted=null;snapshots=[];review={};explanations.clear();$('results').hidden=true;$('empty').hidden=false;$('history-chart').hidden=true;$('history-rows').replaceChildren();$('evidence-view').hidden=true;$('source-evidence').hidden=true;$('predict-view').hidden=false;$('predict-tab').classList.add('active');$('evidence-tab').classList.remove('active');$('demo-note').hidden=!synthetic;}
 function dayLabel(){try{const d=(timestamp($('assessment').value)-timestamp($('baseline').value))/DAY;$('day-label').textContent=`${d===0?t('baselineRisk'):t('followupRisk')} · D${Number.isInteger(d)?d:d.toFixed(2)} · ${t(d>14?'exploratory':'primary')}`;document.querySelectorAll('[data-day]').forEach(b=>b.classList.toggle('active',+b.dataset.day===d));}catch{$('day-label').textContent='';}}
 function addBatch(items=[]){
  const b=el('details','batch'),head=el('summary','batch-header'),remove=el('button','text-button');remove.type='button';remove.dataset.t='remove';remove.textContent=t('remove');head.append(el('strong','',t('batch')+' · '+(items[0]?.measured_at?date(items[0].measured_at):t('assessment'))),remove);b.append(head);b.open=true;document.querySelectorAll('#batches>.batch').forEach(x=>x.open=false);
@@ -77,7 +78,7 @@ function renderCurrent(){if(!current)return;$('empty').hidden=true;$('results').
  $('risk-cards').replaceChildren(...[28,90].map(h=>{const r=current.results[h],card=el('div','risk-card');card.append(el('div','period',t('future'+h)),el('div','risk-number',pct(r.death_before_transplant)),el('div','risk-label',t('death')),el('div','deadline',t('deadline')+': '+date(r.endpoint_time)));const other=el('div','risk-other');other.append(el('span','',t('transplant')+' '+pct(r.liver_transplant)),el('span','',t('free')+' '+pct(r.event_free)));card.append(other);return card;}));
  const c=current.coverage;$('coverage').replaceChildren(...[[c.numeric_features_observed+'/38','observed'],[c.numeric_features_repeated,'repeated'],[c.baseline_features_observed+'/38','baselineObserved'],[c.reports_encoded,'reports']].map(([v,label])=>{const box=el('div');box.append(el('strong','',v),el('small','',t(label)));return box;}));
  $('warnings').hidden=!current.warnings.length;$('warnings').textContent=current.warnings.map(t).join(' ');$('model-id').textContent=`${t('model')}: ${current.version} · SHA256 ${current.model_sha256}`;
- renderCurve();renderHistory();renderEvidence();loadReview();
+ renderCurve();renderHistory();renderEvidence();renderAttribution();loadReview();
 }
 function renderCurve(){if(!current)return;const h=+$('curve-horizon').value,c=current.curves;draw($('rolling-chart'),h,[{points:c.death.slice(0,h+1).map((v,i)=>[i,v]),color:'#c4765b'},{points:c.transplant.slice(0,h+1).map((v,i)=>[i,v]),color:'#4e918b'},{points:c.free.slice(0,h+1).map((v,i)=>[i,v]),color:'#6084ae'}],lang==='en'?'Days after this assessment':'本次评估后天数');}
 function renderHistory(){
@@ -89,13 +90,13 @@ function renderEvidence(){if(!current)return;const h=+$('curve-horizon').value,r
  $('evidence-rows').replaceChildren(...current.evidence.map(m=>{const row=el('tr'),f=schema.fields.find(f=>f.key===m.feature);for(const v of [fieldName(f)+(m.window==='baseline'?(lang==='en'?' (baseline)':'（基线）'):''),m.value+' '+unit(m.unit),date(m.measured_at),date(m.available_at||m.measured_at)])row.append(el('td','',v));return row;}));
  $('report-evidence').replaceChildren(...current.reports_used.map(r=>{const box=el('details','report-evidence');box.append(el('summary','',date(r.measured_at)+' → '+date(r.available_at)),el('p','',r.text));return box;}));if(!current.reports_used.length)$('report-evidence').append(el('p','field-help',t('noReport')));
 }
-function view(name){if(name==='evidence'&&!current){alert(t('emptyEvidence'));return;}saveReview();$('predict-view').hidden=name!=='predict';$('evidence-view').hidden=name!=='evidence';$('predict-tab').classList.toggle('active',name==='predict');$('evidence-tab').classList.toggle('active',name==='evidence');if(name==='evidence')loadReview();}
+function view(name){if(name==='evidence'&&!current){alert(t('emptyEvidence'));return;}saveReview();$('predict-view').hidden=name!=='predict';$('evidence-view').hidden=name!=='evidence';$('source-evidence').hidden=name!=='evidence';$('predict-tab').classList.toggle('active',name==='predict');$('evidence-tab').classList.toggle('active',name==='evidence');if(name==='evidence'){loadReview();renderAttribution();ensureExplanation();}}
 function guide(){const list=el('ol');for(const [head,text]of guides[lang]){const li=el('li');li.append(el('strong','',head),el('p','',text));list.append(li);}$('guide-content').replaceChildren(list);}
 function translate(){
- document.documentElement.lang=lang==='en'?'en':'zh-CN';document.title=t('brand');bindText();$('language').textContent=lang==='en'?'中文':'English';$('legacy-link').href='./baseline.html?lang='+lang;
+ document.documentElement.lang=lang==='en'?'en':'zh-CN';document.title=t('brand');bindText();$('language').textContent=lang==='en'?'中文':'English';
  for(const id of ['prior','decomp'])selectOptions($(id),[['',t('choose')],['1',t('yes')],['0',t('no')]]);selectOptions($('review-status'),['pending','checked','revision'].map(k=>[k,t(k)]));
  document.querySelectorAll('[data-field]').forEach(e=>e.textContent=fieldName(schema.fields.find(f=>f.key===e.dataset.field)));document.querySelectorAll('.measure-input select').forEach(s=>[...s.options].forEach(o=>o.textContent=unit(o.value)));
- document.querySelectorAll('.support-key').forEach(s=>selectOptions(s,supportKeys.map((k,i)=>[k,t(['vent','rrt','pressor'][i])])));selectOptions($('curve-horizon'),[28,90].map(h=>[String(h),h+(lang==='en'?' days':'天')]));
+ document.querySelectorAll('.support-key').forEach(s=>selectOptions(s,supportKeys.map((k,i)=>[k,t(['vent','rrt','pressor'][i])])));for(const id of ['curve-horizon','explain-horizon'])selectOptions($(id),[28,90].map(h=>[String(h),h+(lang==='en'?' days':'天')]));
  $('health').textContent=t(ready?'ready':'loading');guide();dayLabel();if(current)renderCurrent();
 }
 async function execute(daily=false){
@@ -105,7 +106,7 @@ async function execute(daily=false){
  finally{busy=false;$('rolling-form').inert=false;for(const id of ['predict','daily','demo','demo-report','import','clear','language','guide-demo'])$(id).disabled=false;$('progress').hidden=true;}
 }
 function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
-function exportCase(){if(!current||!submitted||busy)return;saveReview();const pack={format:'aclf-rolling-case-v1',exported_at:new Date().toISOString(),case:submitted,prediction_history:snapshots,review_records:review,imported_previous_history:importedHistory,imported_previous_reviews:importedReview,model:{version:current.version,sha256:current.model_sha256,onnx_sha256:current.onnx_sha256},persistence:'User-owned exported file; no server database'};saveBlob(new Blob([JSON.stringify(pack,null,2)],{type:'application/json;charset=utf-8'}),'ACLF_case_history.json');}
+function exportCase(){if(!current||!submitted||busy)return;saveReview();const pack={format:'aclf-rolling-case-v1',exported_at:new Date().toISOString(),case:submitted,prediction_history:snapshots,explanation_records:[...explanations.values()],review_records:review,imported_previous_history:importedHistory,imported_previous_reviews:importedReview,model:{version:current.version,sha256:current.model_sha256,onnx_sha256:current.onnx_sha256},persistence:'User-owned exported file; no server database'};saveBlob(new Blob([JSON.stringify(pack,null,2)],{type:'application/json;charset=utf-8'}),'ACLF_case_history.json');}
 function exportCsv(){if(!current||busy)return;const lines=['assessment_time,day,model_version,model_sha256,horizon_days,deadline,death_before_transplant,transplant,event_free'];for(const s of snapshots)for(const h of [28,90]){const r=s.results[h];lines.push([s.assessment_time,s.days_since_T0,s.version,s.model_sha256,h,r.endpoint_time,r.death_before_transplant,r.liver_transplant,r.event_free].join(','));}saveBlob(new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),'ACLF_daily_history.csv');const rows=['assessment_time,days_from_assessment,death_before_transplant,transplant,event_free'];for(let d=0;d<=90;d++)rows.push([current.assessment_time,d,current.curves.death[d],current.curves.transplant[d],current.curves.free[d]].join(','));saveBlob(new Blob(['\uFEFF'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'}),'ACLF_selected_curves.csv');}
 async function loadDemo(withReport=false){const response=await fetch('./assets/rolling/synthetic-case.json');if(!response.ok)throw Error('Synthetic case unavailable');const data=await response.json();if(!withReport)data.reports=[];populate(data);view('predict');}
 async function health(){try{const h=await request('health');ready=h.state==='ready';$('health').textContent=h.message||t(ready?'ready':'loading');$('predict').disabled=!ready||busy;$('daily').disabled=!ready||busy;if(!ready&&h.state!=='error')setTimeout(health,2000);}catch(e){$('health').textContent=e.message;}}
@@ -115,6 +116,62 @@ async function showMetrics(){
  for(const [key,label]of [['overall','allPatients'],['with_report','reportedPatients']]){root.append(el('h3','',t(label)));const wrap=el('div','table-wrap'),table=el('table'),head=el('tr');for(const v of [t('day'),lang==='en'?'Horizon': '未来天数',t('patients'),'AUC','AUPRC','Brier'])head.append(el('th','',v));table.append(head);for(const row of data[key]){const tr=el('tr');for(const v of [row.day+(row.day>14?' *':''),row.horizon,row.patients,...['death_cif_auc_ipcw','death_cif_auprc_ipcw','death_cif_brier_ipcw'].map(k=>row[k]===null?'—':row[k].toFixed(3))])tr.append(el('td','',v));table.append(tr);}wrap.append(table);root.append(wrap);}
  $('metrics-dialog').showModal();
 }
+function explanationKey(){return current?current.model_sha256+':'+current.input_sha256:'';}
+function groupName(g){
+ if(g.kind==='numeric')return fieldName(schema.fields.find(f=>f.key===g.key));
+ if(g.kind==='support')return t(['vent','rrt','pressor'][supportKeys.indexOf(g.key)]);
+ return t({age:'age',prior_definite:'prior',prior_ascites_or_he_code:'decomp',reports:'reportTitle'}[g.key]);
+}
+function groupObserved(g){
+ if(g.kind==='numeric'){
+  const items=g.evidence.filter(e=>e.window!=='baseline'),base=g.evidence.filter(e=>e.window==='baseline'),last=items.at(-1),old=base.at(-1),parts=[];
+  parts.push(t('currentValue')+': '+(last?last.value+' '+unit(last.unit):t('noObserved')));
+  if(old)parts.push(t('baselineValue')+': '+old.value+' '+unit(old.unit));return parts.join(' · ');
+ }
+ if(g.kind==='support')return g.observed?t(g.key===supportKeys[0]?'vent':g.key===supportKeys[1]?'rrt':'pressor'):t('supportUnknown');
+ if(g.kind==='report')return g.observed+' '+t('reports');
+ return g.key==='age'?String(g.observed):t(g.observed?'yes':'no');
+}
+function evidenceText(r){
+ if(r.text)return (r.encoded===false?(lang==='en'?'Availability evidence only; not encoded. ':'仅作为报告可用性证据，未编码正文。 '):'')+r.text+'\n'+date(r.measured_at||r.available_at)+' → '+date(r.available_at);
+ if(r.start_at)return date(r.start_at)+' — '+date(r.end_at)+' · '+t('available')+': '+date(r.available_at);
+ return (r.window==='baseline'?t('baselineValue'):t('currentValue'))+' · '+r.value+' '+unit(r.unit)+' · '+date(r.measured_at)+' → '+date(r.available_at||r.measured_at);
+}
+function renderAttribution(){
+ if(!current)return;
+ selectOptions($('explain-assessment'),snapshots.map(s=>[s.assessment_time,`D${s.days_since_T0} · ${date(s.assessment_time)}`]));$('explain-assessment').value=current.assessment_time;
+ $('explain-horizon').value=$('curve-horizon').value;
+ const h=+$('explain-horizon').value,ex=explanations.get(explanationKey()),output=ex?.horizons[h];
+ $('explain-selected-time').textContent=`${current.case_id||'—'} · D${current.days_since_T0} · ${date(current.assessment_time)} · ${t('future'+h)} · ${t('deadline')}: ${date(current.results[h].endpoint_time)}`;
+ $('attribution-empty').hidden=!!output;$('attribution-output').hidden=!output;if(!output){$('attribution-empty').textContent=t('explanationPending');return;}
+ $('attribution-summary').replaceChildren(...[[pct(output.risk),'selectedRisk'],[pct(output.reference_risk),'referenceRisk'],[(output.contribution_sum_pp>=0?'+':'')+output.contribution_sum_pp.toFixed(2),'contributionSum']].map(([v,k])=>{const box=el('div');box.append(el('strong','',v),el('small','',t(k)));return box;}));
+ const sorted=[...output.groups].sort((a,b)=>Math.abs(b.contribution_pp)-Math.abs(a.contribution_pp)),top=sorted.slice(0,10),max=Math.max(...top.map(g=>Math.abs(g.contribution_pp)),1e-9);
+ $('contribution-bars').replaceChildren(...top.map(g=>{const row=el('div','bar-row'),track=el('div','bar-track'),left=el('div','bar-half bar-left'),right=el('div','bar-half'),bar=el('div','bar-fill '+(g.contribution_pp>=0?'positive':'negative'));bar.style.width=Math.abs(g.contribution_pp)/max*100+'%';(g.contribution_pp>=0?right:left).append(bar);track.append(left,right);row.append(el('span','bar-label',groupName(g)),track,el('span','bar-value',(g.contribution_pp>=0?'+':'')+g.contribution_pp.toFixed(2)));return row;}));
+ $('contribution-balance').textContent=`${pct(output.reference_risk)} + ${output.contribution_sum_pp.toFixed(2)} ${t('pp')} = ${pct(output.risk)} · ${t('reconstruction')}: ${output.reconstruction_error_pp.toExponential(2)}`;
+ $('contribution-rows').replaceChildren(...sorted.map(g=>{const row=el('tr'),evidence=el('td');if(g.evidence.length){const details=el('details');details.append(el('summary','',g.evidence.length+' '+(lang==='en'?'record(s)':'条记录')));for(const r of g.evidence)details.append(el('p','evidence-item',evidenceText(r)));evidence.append(details);}else evidence.textContent=groupObserved(g);row.append(el('td','',groupName(g)),el('td','',groupObserved(g)),el('td',g.contribution_pp>=0?'positive-text':'negative-text',(g.contribution_pp>=0?'+':'')+g.contribution_pp.toFixed(3)),evidence);return row;}));
+ $('explanation-method').textContent=t('referenceMethod')+' · '+ex.model_version+' · SHA256 '+ex.model_sha256;
+}
+async function ensureExplanation(){
+ if(!current||!submitted||busy)return;
+ const key=explanationKey();if(explanations.has(key)){renderAttribution();return;}
+ saveReview();busy=true;$('rolling-form').inert=true;document.querySelector('.results-column').inert=true;
+ const controls=['compute-explanation','explain-assessment','explain-horizon','demo','demo-report','import','clear','language','guide-demo','export-explanation'];for(const id of controls)$(id).disabled=true;
+ $('attribution-empty').hidden=false;$('attribution-empty').textContent=t('explanationProgress');$('progress').hidden=false;$('progress').textContent=t('explanationProgress');
+ try{
+  const payload={...structuredClone(submitted),assessment_time:current.assessment_time},ex=await request('explain',{case:payload,model_sha256:current.model_sha256,input_sha256:current.input_sha256});
+  if(ex.model_sha256!==current.model_sha256||ex.input_sha256!==current.input_sha256||ex.assessment_time!==current.assessment_time||[28,90].some(h=>Math.abs(ex.horizons[h].risk-current.results[h].death_before_transplant)>3e-6))throw Error(t('explanationModelMismatch'));
+  explanations.set(key,ex);renderAttribution();
+ }catch(e){$('attribution-output').hidden=true;$('attribution-empty').hidden=false;$('attribution-empty').textContent=t('explanationFailed')+' '+e.message;}
+ finally{busy=false;$('rolling-form').inert=false;document.querySelector('.results-column').inert=false;for(const id of controls)$(id).disabled=false;$('progress').hidden=true;}
+}
+function exportExplanation(){
+ const ex=explanations.get(explanationKey());if(!ex||!current||busy)return;saveReview();const h=+$('explain-horizon').value,out=ex.horizons[h],check=review[current.assessment_time]||{};
+ const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const groups=[...out.groups].sort((a,b)=>Math.abs(b.contribution_pp)-Math.abs(a.contribution_pp));
+ const rows=groups.map(g=>`<tr><td>${escape(groupName(g))}</td><td>${escape(groupObserved(g))}</td><td class="${g.contribution_pp>=0?'positive':'negative'}">${g.contribution_pp>=0?'+':''}${g.contribution_pp.toFixed(3)}</td><td>${g.evidence.map(r=>`<p>${escape(evidenceText(r))}</p>`).join('')}</td></tr>`).join('');
+ const html=`<!doctype html><html lang="${lang==='en'?'en':'zh-CN'}"><meta charset="utf-8"><title>${escape(t('reportTitleExport'))}</title><style>body{font:14px/1.6 system-ui,SimSun,sans-serif;color:#19364a;max-width:1100px;margin:30px auto;padding:20px}h1,h2{color:#16777b}.summary{background:#eff7f7;padding:20px;border-radius:8px}table{width:100%;border-collapse:collapse}th,td{padding:12px;border:1px solid #dfe8ed;text-align:left;vertical-align:top}th{background:#eff7f7}td p{white-space:pre-wrap;overflow-wrap:anywhere}.positive{color:#bd6f58}.negative{color:#438992}.model{overflow-wrap:anywhere;font-size:11px}@media print{body{margin:0;padding:0}tr{break-inside:avoid}thead{display:table-header-group}}</style><h1>${escape(t('reportTitleExport'))}</h1><p>${escape(current.case_id||'—')} · ${synthetic?escape(t('demoNote')):''}</p><p>T0: ${escape(current.baseline_time)}<br>${escape(t('assessment'))}: ${escape(current.assessment_time)} · D${current.days_since_T0}<br>${escape(t('future'+h))} · ${escape(t('deadline'))}: ${escape(out.endpoint_time)}</p><div class="summary">${escape(t('selectedRisk'))}: <b>${pct(out.risk)}</b> · ${escape(t('referenceRisk'))}: ${pct(out.reference_risk)} · ${escape(t('contributionSum'))}: ${out.contribution_sum_pp.toFixed(3)}<br>${escape(t('reconstruction'))}: ${out.reconstruction_error_pp.toExponential(2)}</div><p>${escape(t('referenceMethod'))}</p><p>${escape(t('contributionHelp'))}</p><table><thead><tr><th>${escape(t('indicator'))}</th><th>${escape(t('value'))}</th><th>${escape(t('contribution'))}</th><th>${escape(t('evidenceTitle'))}</th></tr></thead><tbody>${rows}</tbody></table><h2>${escape(t('reviewResult'))}</h2><p>${escape(t(check.status||'pending'))}</p><p>${escape(check.notes||'')}</p><p>${escape(t('reviewNote'))}</p><p class="model">${escape(ex.model_version)} · SHA256 ${escape(ex.model_sha256)}<br>Input SHA256 ${escape(ex.input_sha256)}<br>${escape(ex.generated_at)}</p></html>`;
+ saveBlob(new Blob([html],{type:'text/html;charset=utf-8'}),`ACLF_explanation_D${current.days_since_T0}_${h}d.html`);
+}
 async function init(){
  const response=await fetch('./assets/schema.json');if(!response.ok)throw Error('Field schema unavailable');schema=await response.json();translate();const now=localNow();populate({admission_time:iso(timestamp(now)-18*HOUR),baseline_time:now,assessment_time:now,measurements:[]});
  $('rolling-form').onsubmit=e=>{e.preventDefault();execute();};$('rolling-form').addEventListener('input',()=>{markDirty();dayLabel();});$('rolling-form').addEventListener('change',()=>{markDirty();dayLabel();});
@@ -122,7 +179,10 @@ async function init(){
  document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{try{$('assessment').value=iso(timestamp($('baseline').value)+Number(b.dataset.day)*DAY).slice(0,19);markDirty();dayLabel();}catch(e){$('error').textContent=e.message;$('error').hidden=false;}});
  $('demo').onclick=()=>loadDemo().catch(e=>alert(e.message));$('demo-report').onclick=()=>loadDemo(true).catch(e=>alert(e.message));$('daily').onclick=()=>execute(true);$('clear').onclick=()=>{if(confirm(t('resetConfirm'))){const n=localNow();populate({admission_time:iso(timestamp(n)-18*HOUR),baseline_time:n,assessment_time:n,measurements:[]});}};
  $('language').onclick=()=>{saveReview();lang=lang==='en'?'zh':'en';history.replaceState(null,'',location.pathname+'?lang='+lang);translate();};$('guide').onclick=()=>{$('guide-dialog').showModal();};$('close-guide').onclick=()=>$('guide-dialog').close();$('guide-demo').onclick=()=>{$('guide-dialog').close();loadDemo().catch(e=>alert(e.message));};
- $('predict-tab').onclick=()=>view('predict');$('evidence-tab').onclick=()=>view('evidence');$('open-evidence').onclick=()=>view('evidence');$('curve-horizon').onchange=()=>{renderCurve();renderEvidence();};$('export').onclick=exportCase;$('export-review').onclick=exportCase;$('csv').onclick=exportCsv;$('print').onclick=()=>window.print();
+ $('predict-tab').onclick=()=>view('predict');$('evidence-tab').onclick=()=>view('evidence');$('open-evidence').onclick=()=>view('evidence');$('curve-horizon').onchange=()=>{renderCurve();renderEvidence();renderAttribution();};$('export').onclick=exportCase;$('export-review').onclick=exportCase;$('csv').onclick=exportCsv;$('print').onclick=()=>window.print();
+ $('compute-explanation').onclick=ensureExplanation;$('explain-horizon').onchange=()=>{$('curve-horizon').value=$('explain-horizon').value;renderCurve();renderEvidence();renderAttribution();};
+ $('explain-assessment').onchange=()=>{if(busy)return;saveReview();current=snapshots.find(s=>s.assessment_time===$('explain-assessment').value);renderCurrent();ensureExplanation();};
+ $('export-explanation').onclick=exportExplanation;$('print-explanation').onclick=()=>window.print();
  $('import').onclick=()=>$('import-file').click();$('import-file').onchange=async()=>{const f=$('import-file').files[0];if(!f)return;try{if(f.size>16*1024*1024)throw Error('Case JSON exceeds 16 MiB');const pack=JSON.parse(await f.text());const data=pack.case||pack;if(!data||!Array.isArray(data.measurements)||!(data.baseline_time||data.prediction_time))throw Error(t('importError'));populate(data,{resetStatus:true});importedHistory=Array.isArray(pack.prediction_history)?pack.prediction_history:[];importedReview=pack.review_records&&typeof pack.review_records==='object'?pack.review_records:{};$('error').hidden=true;$('demo-note').hidden=false;$('demo-note').textContent=t('imported');}catch(e){$('error').textContent=e.message;$('error').hidden=false;}finally{$('import-file').value='';}};
  if(new URLSearchParams(location.search).get('guide')==='1')$('guide-dialog').showModal();$('metrics').onclick=()=>showMetrics().catch(e=>alert(e.message));$('close-metrics').onclick=()=>$('metrics-dialog').close();health();
 }

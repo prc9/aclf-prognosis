@@ -118,7 +118,7 @@ export class ReportPipeline {
    const words=radgraphWords(sentence);if(words.length>this.manifest.max_sentence_words||this.rad.words(words).pieces.length>this.manifest.max_sentence_pieces)throw Error('报告单句过长，请分句后重试；未自动截断报告。');
   }
   const graph=await this.facts(reports),out={};
-  for(const h of [28,90])out[h]={...graph,notes:await this.encode(h,reports)};
+  for(const h of [90])out[h]={...graph,notes:await this.encode(h,reports)};
   this.progress({stage:'done'});return out;
  }
 }

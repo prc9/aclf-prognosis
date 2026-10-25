@@ -12,6 +12,6 @@ Model origins used by the project:
 - RadGraph-XL: https://huggingface.co/StanfordAIMI/RRG_scorers
 - RadGraph transformer configuration/tokenizer: https://huggingface.co/microsoft/BiomedVLP-CXR-BERT-general
 
-The two exported ClinicalBERT encoders contain the project's saved encoder states. They are not presented as unmodified upstream checkpoints. Source candidate and exported model hashes are recorded in `assets/manifest.json` and `assets/reports/manifest.json`.
+The frozen ClinicalBERT-90 encoder contains the project's saved encoder state, rather than an unmodified upstream checkpoint. The current rolling risk-model identity is recorded in `assets/rolling/manifest.json`; frozen report encoders are recorded in `assets/reports/manifest.json`. The current grouped explanation uses synthetic reference cases and the current rolling risk model.
 
 ONNX Runtime Web retains its notices under `runtime/`. This browser site does not include training patient data or grant access to any underlying clinical dataset.
