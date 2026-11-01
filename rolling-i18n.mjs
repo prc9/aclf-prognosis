@@ -32,3 +32,25 @@ guides.en[6][1]='Days 0–14 are the primary update range; days 15–28 are expl
 guides.zh[6][1]='第0—14天为主要更新范围，第15—28天为探索范围。预测结局为肝移植前死亡，仅供科研。每次评估均使用当前滚动模型，并可生成对应解释报告。';
 en.explainHelp='The report-content sensitivity compares this model with its semantic and fact inputs masked out; report-availability features remain. This comparison is separate from the grouped Shapley report contribution and does not describe a causal effect.';
 zh.explainHelp='报告内容敏感性比较本模型正常输入与屏蔽报告语义及事实输入后的预测，保留报告可用性特征；它与上方分组Shapley中的报告贡献口径不同，不代表因果效果。';
+
+// Research workspace copy: labels describe tasks rather than promotional claims.
+Object.assign(en, {
+ workspaceLabel:'Clinical research workspace', assessmentLabel:'Risk analysis',
+ headline:'ACLF longitudinal risk assessment', subtitle:'Longitudinal prognosis · Research workspace',
+ caseTitle:'Case and assessment', caseNav:'Case details', measurementNav:'Measurements', supportNav:'Organ support', reportNav:'Reports',
+ workflowData:'Enter data', workflowRisk:'Estimate risk', workflowReview:'Review evidence',
+ buildNote:'Rolling competing-risk prediction · Days 0–14: primary update range; days 15–28: exploratory. Inputs are processed on your device.',
+ addBatch:'Add a measurement group', addSupport:'Add support record', addReport:'Add English report',
+ generate:'Calculate current risk', openEvidence:'Explain this assessment and review evidence',
+ contributions:'Contributions to predicted risk', guide:'User guide', ready:'Prediction model ready'
+});
+Object.assign(zh, {
+ workspaceLabel:'临床科研工作台', assessmentLabel:'风险分析',
+ headline:'慢加急性肝衰竭纵向风险评估', subtitle:'纵向预后分析 · 科研工作台',
+ caseTitle:'病例资料与评估时点', caseNav:'病例资料', measurementNav:'检验与测量', supportNav:'治疗支持', reportNav:'影像报告',
+ workflowData:'录入资料', workflowRisk:'计算风险', workflowReview:'核对证据',
+ buildNote:'滚动竞争风险预测 · 第0—14天为主要更新范围，第15—28天为探索范围。病例资料在您的设备上处理。',
+ addBatch:'添加一组测量', addSupport:'添加治疗支持', addReport:'添加英文报告',
+ generate:'计算本次风险', openEvidence:'查看本次解释与证据',
+ contributions:'预测风险的信息贡献', guide:'使用说明', ready:'预测模型已就绪'
+});

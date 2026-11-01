@@ -1,4 +1,4 @@
-import {en,zh,fieldNames,guides} from './rolling-i18n.mjs?v=20261025-2';
+import {en,zh,fieldNames,guides} from './rolling-i18n.mjs?v=20261101-1';
 import {timestamp} from './time.mjs?v=20261025';
 import {DAY,HOUR,iso,supportKeys} from './rolling-features.mjs?v=20261025';
 const $=id=>document.getElementById(id),el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
@@ -20,10 +20,10 @@ function control(label,key,type,value='',required=false){const l=el('label');con
 function markDirty(){if(busy)return;saveReview();current=null;submitted=null;snapshots=[];review={};explanations.clear();$('results').hidden=true;$('empty').hidden=false;$('history-chart').hidden=true;$('history-rows').replaceChildren();$('evidence-view').hidden=true;$('source-evidence').hidden=true;$('predict-view').hidden=false;$('predict-tab').classList.add('active');$('evidence-tab').classList.remove('active');$('demo-note').hidden=!synthetic;}
 function dayLabel(){try{const d=(timestamp($('assessment').value)-timestamp($('baseline').value))/DAY;$('day-label').textContent=`${d===0?t('baselineRisk'):t('followupRisk')} · D${Number.isInteger(d)?d:d.toFixed(2)} · ${t(d>14?'exploratory':'primary')}`;document.querySelectorAll('[data-day]').forEach(b=>b.classList.toggle('active',+b.dataset.day===d));}catch{$('day-label').textContent='';}}
 function addBatch(items=[]){
- const b=el('details','batch'),head=el('summary','batch-header'),remove=el('button','text-button');remove.type='button';remove.dataset.t='remove';remove.textContent=t('remove');head.append(el('strong','',t('batch')+' · '+(items[0]?.measured_at?date(items[0].measured_at):t('assessment'))),remove);b.append(head);b.open=true;document.querySelectorAll('#batches>.batch').forEach(x=>x.open=false);
+ const b=el('details','batch'),head=el('summary','batch-header'),remove=el('button','text-button');remove.type='button';remove.dataset.icon='trash';remove.dataset.t='remove';remove.textContent=t('remove');head.append(el('strong','',t('batch')+' · '+(items[0]?.measured_at?date(items[0].measured_at):t('assessment'))),remove);b.append(head);b.open=true;document.querySelectorAll('#batches>.batch').forEach(x=>x.open=false);
  const times=el('div','batch-times');times.append(control('measured','measured','datetime-local',items[0]?.measured_at?.slice(0,19)||$('assessment').value,true),control('available','available','datetime-local',items[0]?.available_at?.slice(0,19)||'',false));b.append(times);
  for(const [group,key]of [['核心检验','core'],['生命体征','vitals'],['其他观测','other'],['补充检验','extra']]){
-  const details=el('details','group-details');details.open=['core','vitals'].includes(key);const title=el('summary','',t(key));title.dataset.t=key;details.append(title);const grid=el('div','measure-grid');grid.style.marginTop='12px';
+  const details=el('details','group-details');details.open=['core','vitals'].includes(key);const title=el('summary','',t(key));title.dataset.t=key;title.dataset.icon=({core:'flask',vitals:'pulse',other:'case',extra:'flask'})[key];details.append(title);const grid=el('div','measure-grid');grid.style.marginTop='12px';
   for(const f of schema.fields.filter(f=>f.group===group)){
    const box=el('div'),label=el('label','measurement-label'),name=el('span','',fieldName(f));name.dataset.field=f.key;label.append(name);const item=items.find(m=>m.feature===f.key);
    if(['total_bilirubin','inr'].includes(f.key)){const l=el('label','core-trigger'),radio=el('input');radio.type='radio';radio.name='trigger-'+f.key;radio.checked=!!item?.trigger;const span=el('span','',t('trigger'));span.dataset.t='trigger';l.append(radio,span);label.append(l);}
@@ -35,11 +35,11 @@ function addBatch(items=[]){
 }
 function addSupport(record={}){
  const box=el('div','support-record'),head=el('div','row-actions'),select=el('select');select.className='support-key';
- selectOptions(select,supportKeys.map((k,i)=>[k,t(['vent','rrt','pressor'][i])]));select.value=record.feature||supportKeys[0];const remove=el('button','text-button',t('remove'));remove.type='button';remove.dataset.t='remove';head.append(select,remove);box.append(head);
+ selectOptions(select,supportKeys.map((k,i)=>[k,t(['vent','rrt','pressor'][i])]));select.value=record.feature||supportKeys[0];const remove=el('button','text-button',t('remove'));remove.type='button';remove.dataset.icon='trash';remove.dataset.t='remove';head.append(select,remove);box.append(head);
  const times=el('div','time-grid');times.append(control('start','support-start','datetime-local',record.start_at?.slice(0,19)||$('assessment').value,true),control('end','support-end','datetime-local',record.end_at?.slice(0,19)||$('assessment').value,true),control('available','support-available','datetime-local',record.available_at?.slice(0,19)||$('assessment').value,true));box.append(times);remove.onclick=()=>{box.remove();markDirty();};$('supports').append(box);
 }
 function addReport(record={}){
- const box=el('div','report'),head=el('div','report-header'),remove=el('button','text-button',t('remove'));remove.type='button';remove.dataset.t='remove';head.append(el('strong','',t('reportTitle')),remove);box.append(head);
+ const box=el('div','report'),head=el('div','report-header'),remove=el('button','text-button',t('remove'));remove.type='button';remove.dataset.icon='trash';remove.dataset.t='remove';head.append(el('strong','',t('reportTitle')),remove);box.append(head);
  const body=el('div','report-body'),times=el('div','time-grid');times.append(control('formed','report-formed','datetime-local',(record.measured_at||record.available_at)?.slice(0,19)||$('assessment').value,true),control('available','report-available','datetime-local',record.available_at?.slice(0,19)||$('assessment').value,true));const text=el('textarea');text.rows=5;text.maxLength=20000;text.className='report-text';text.value=record.text||'';text.required=true;text.setAttribute('aria-label',t('text'));body.append(times,text);box.append(body);remove.onclick=()=>{box.remove();markDirty();};$('reports').append(box);
 }
 function collect(){
@@ -75,8 +75,8 @@ function draw(svg,horizon,series,xLabel){
  add('text',{x:480,y:bottom+43,'text-anchor':'end',fill:'#758b98','font-size':11},xLabel);svg.setAttribute('aria-label',xLabel);
 }
 function renderCurrent(){if(!current)return;$('empty').hidden=true;$('results').hidden=false;$('scope').textContent=t(current.evaluation_scope);$('result-time').textContent=`${current.case_id||'—'} · ${synthetic?t('demoNote').split('.')[0]:''} · D${current.days_since_T0} · ${date(current.assessment_time)}`;
- $('risk-cards').replaceChildren(...[28,90].map(h=>{const r=current.results[h],card=el('div','risk-card');card.append(el('div','period',t('future'+h)),el('div','risk-number',pct(r.death_before_transplant)),el('div','risk-label',t('death')),el('div','deadline',t('deadline')+': '+date(r.endpoint_time)));const other=el('div','risk-other');other.append(el('span','',t('transplant')+' '+pct(r.liver_transplant)),el('span','',t('free')+' '+pct(r.event_free)));card.append(other);return card;}));
- const c=current.coverage;$('coverage').replaceChildren(...[[c.numeric_features_observed+'/38','observed'],[c.numeric_features_repeated,'repeated'],[c.baseline_features_observed+'/38','baselineObserved'],[c.reports_encoded,'reports']].map(([v,label])=>{const box=el('div');box.append(el('strong','',v),el('small','',t(label)));return box;}));
+ $('risk-cards').replaceChildren(...[28,90].map(h=>{const r=current.results[h],card=el('div','risk-card');card.append(el('div','period',t('future'+h)),el('div','risk-number',pct(r.death_before_transplant)),el('div','risk-label',t('death')),el('div','deadline',t('deadline')+': '+date(r.endpoint_time)));card.querySelector('.period').dataset.icon='calendar';const other=el('div','risk-other');other.append(el('span','',t('transplant')+' '+pct(r.liver_transplant)),el('span','',t('free')+' '+pct(r.event_free)));card.append(other);return card;}));
+ const c=current.coverage;$('coverage').replaceChildren(...[[c.numeric_features_observed+'/38','observed'],[c.numeric_features_repeated,'repeated'],[c.baseline_features_observed+'/38','baselineObserved'],[c.reports_encoded,'reports']].map(([v,label])=>{const box=el('div');box.dataset.icon=({observed:'flask',repeated:'refresh',baselineObserved:'case',reports:'report'})[label];box.append(el('strong','',v),el('small','',t(label)));return box;}));
  $('warnings').hidden=!current.warnings.length;$('warnings').textContent=current.warnings.map(t).join(' ');$('model-id').textContent=`${t('model')}: ${current.version} · SHA256 ${current.model_sha256}`;
  renderCurve();renderHistory();renderEvidence();renderAttribution();loadReview();
 }
