@@ -54,3 +54,21 @@ Object.assign(zh, {
  generate:'计算本次风险', openEvidence:'查看本次解释与证据',
  contributions:'预测风险的信息贡献', guide:'使用说明', ready:'预测模型已就绪'
 });
+
+// Bilingual captions distinguish explanatory graphics from patient results.
+Object.assign(en, {
+ overviewCaption:'Clinical evidence over successive assessments · schematic',
+ flowData:'Clinical data',flowDataDetail:'Measurements & reports',
+ flowRisk:'Risk prediction',flowRiskDetail:'Next 28 / 90 days',
+ flowExplain:'Model explanation',flowExplainDetail:'Contributions & evidence',
+ flowReview:'Medical review',flowReviewDetail:'Check inputs & export',
+ outcomesSchematic:'Competing outcomes · schematic, not a prediction'
+});
+Object.assign(zh, {
+ overviewCaption:'连续评估中的临床证据 · 示意图',
+ flowData:'临床资料',flowDataDetail:'检验、测量与报告',
+ flowRisk:'风险预测',flowRiskDetail:'从本次起未来28／90天',
+ flowExplain:'模型解释',flowExplainDetail:'信息贡献与原始证据',
+ flowReview:'医学复核',flowReviewDetail:'核对资料与导出记录',
+ outcomesSchematic:'三种竞争结局示意，非病例预测结果'
+});
